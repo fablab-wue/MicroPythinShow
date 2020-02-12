@@ -1,20 +1,35 @@
-# MicroPythonShow
+# MicroPython-Show
 
 Live-Vortrag über MicroPython für ESP8266 / ESP32
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Micropython-logo.svg/200px-Micropython-logo.svg.png) ![](https://avatars2.githubusercontent.com/u/6298560?s=200&v=4)
+
+"MicroPython ist eine Softwareimplementierung einer Programmiersprache, die weitgehend kompatibel mit Python 3 ist, geschrieben in C, die für den Betrieb auf einem Mikrocontroller optimiert ist. MicroPython ist ein vollständiger Python-Compiler und eine Laufzeitumgebung, die auf der Mikrocontroller-Hardware läuft. Enthalten ist eine Auswahl von Python-Kernbibliotheken; MicroPython enthält Module, die dem Programmierer Zugriff auf Low-Level-Hardware ermöglichen. Der Quellcode für das Projekt ist auf GitHub unter der MIT-Lizenz verfügbar." 
+*Quelle: [Wikipedia.de](https://de.wikipedia.org/wiki/MicroPython) / [Wikipedia.com](https://en.wikipedia.org/wiki/MicroPython)*
+
+##### PyBoard
+![](http://micropython.org/static/home/img/pybv11-persp.jpg)
+*Quelle: [micropython.org](http://micropython.org/)*
+
+Entwickelt von [Damien P. George](http://dpgeorge.net/) in 2014. Sourcen auf [Github](https://github.com/micropython/micropython)
+
+---
 
 ### Größenordnung
 
 Typische Größen:
 
-| Rechner | Bits | CPU | RAM | Disk/Flash | Leistung | Features |
+| Rechner | Bits | CPU | RAM | Disk/Flash | P | Features |
 | - | - | - | - | - | - | - |
 | PC / Laptop | 64 | ~3 GHz | ~8 GB | ~1 TB | >50 W | Betriebssystem, (W)LAN, FPU, GPU, ...
 | Raspberry Pi 3 | 32 | 1 GHz | 512 MB | 4 GB ... 32 GB | 5 W | Betriebssystem, GPIO, (W)LAN
-| ==ESP32== | 32 | 240 MHz | 160 kB (4 MB) | 4 MB | <1 W | GPIO, WLAN
-| ==ESP8266== | 32 | 80 MHz | 80 kB | 512 kB ... 4 MB | <1 W | GPIO, WLAN
+| __ESP32__ | 32 | 240 MHz | 160 kB (4 MB) | 4 MB | <1 W | GPIO, WLAN
+| __ESP8266__ | 32 | 80 MHz | 80 kB | 512 kB ... 4 MB | <1 W | GPIO, WLAN
 | Arduino (AVR) | 8 | 16 MHz| 2 Kb | 16 kB | <100 mW | GPIO
 
 > => Für Hardware-Spielereien: **ESP**
+
+---
 
 ### Entwicklungsumgebung für ESP
 
@@ -24,7 +39,8 @@ https://www.arduino.cc/
 
 - Programmiersprache (fast) C / C++
 - Compiler
-- Programmier-Tool (speichern in Flash)
+- Programmier-Tool (speichern im Flash)
+- Kein Debugger
 
 ##### MicroPython
 
@@ -39,13 +55,18 @@ https://docs.micropython.org/
 - Standard-Module (fast) wie CPython
 - Hardware-Module für ESP
 
+---
+
 ### Installation
 
-##### Einmalige Installation auf dem ESP
+##### Einmalige Flashen auf dem ESP
 
 http://micropython.org/download
 
 Anleitung folgen...
+
+    esptool.py --chip esp32 --port /dev/ttyUSB0 erase_flash
+    esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 esp32-20190125-v1.10.bin
 
 ##### Kommunikation mit ESP / IDE
 
@@ -80,6 +101,8 @@ REPL mit Tab-Completion ...
 
 WebREPL: http://micropython.org/webrepl/
 
+---
+
 ### Module (Libs)
 
 Anzeige aller 'eingebauten' Module:
@@ -103,7 +126,7 @@ Plus any modules on the filesystem
 >>>
 ```
 
-##### Übersicht Standard-Module
+##### Übersicht Standard-Module (wie CPython)
 
 - cmath – mathematical functions for complex numbers
 - gc – control the garbage collector
@@ -177,11 +200,13 @@ stderr          stdin           stdout
 >>> sys.std
 ```
 
+---
+
 ### Zugriff auf die Hardware des ESP
 
 Alle Klassen für den Zugriff auf Hardware sind im Modul "machine"
 
-##### GPIO out (LED)
+##### GPIO als Ausgang (LED)
 
 ```python
 >>> from machine import Pin
@@ -199,7 +224,7 @@ init            irq             off             on
 >>>
 ```
 
-##### GPIO in (Button)
+##### GPIO als Eingang (Button)
 
 ```python
 >>> from machine import Pin
@@ -269,6 +294,7 @@ adc.read()                  # read value using the newly configured attenuation 
 
 - UART
 - SPI
+- DAC
 - RTC
 - RMT (ESP32)
 - OneWire
@@ -276,6 +302,8 @@ adc.read()                  # read value using the newly configured attenuation 
 - DHT
 - Timer
 - Sleep
+
+---
 
 ### Netzwerk
 
@@ -288,23 +316,13 @@ import time
 SSID = "<your-SSID>"
 PWD = "<your-password>"
 
-# WLAN-Objekt als _Client_ erzeugen
-sta_if = network.WLAN(network.STA_IF)
-
-# Modem einschalten
-sta_if.active(True)
-
-# Scannen nach APs
-sta_if.scan()
-
-# Verbindung herstellen
-sta_if.connect(SSID, PWD) # Connect to an AP
-
-# Verbindung prüfen
-sta_if.isconnected()
-
-# IP ausgeben
-sta_if.ifconfig()
+sta_if = network.WLAN(network.STA_IF)   # WLAN-Objekt als _Client_ erzeugen
+sta_if.active(True)                     # Modem einschalten
+sta_if.scan()                           # Scannen nach APs
+sta_if.connect(SSID, PWD)               # Verbindung herstellen
+while not sta_if.isconnected():         # Verbindung prüfen
+    pass
+print(sta_if.ifconfig())                # IP ausgeben
 ```
 
 > siehe main.py
@@ -325,7 +343,7 @@ while not station.isconnected():
 print(station.ifconfig())
 ```
 
-##### Uhrzeit über Netzwerk holen
+##### Uhrzeit über Netzwerk holen (NTP)
 
 ```python
 >>> import ntptime
@@ -377,6 +395,8 @@ status_code     reason
 ...
 ```
 
+---
+
 ### Flash-Dateisystem
 
 ```python
@@ -422,5 +442,13 @@ clear
 >>> cd("lib")
 >>>
 ```
+
+---
+
+### Demo: WebServer
+
+[Projekt auf Github](https://github.com/jczic/MicroWebSrv2)
+
+---
 
 ### The End
