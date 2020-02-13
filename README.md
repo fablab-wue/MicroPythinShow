@@ -205,13 +205,22 @@ Diese Module sind in C geschrieben oder im Byte-Code kompiliert und liegen im Fl
 
 ##### Regeln für Modulnamen
 
-Mit __import__ werden Module geladen.
-Wird ein Name ohne führendem 'u' angegeben wird zuerst ein Modul mit diesem Namen gesucht. Ist kein Modul mit diesem Namen vorhanden, wird ein Modul mit vorangestelltem 'u' gesucht und unter dem Originalnamen geladen.
+- Mit __`import  <name>`__ werden Module geladen.
+
+- Module mit führendem 'u' sind vereinfachte Versionen der CPython Module.
+
+- Wird ein Name __ohne__ führendem 'u' angegeben wird zuerst ein Modul mit diesem Namen gesucht. Ist kein Modul mit diesem Namen vorhanden, wird ein Modul mit vorangestelltem 'u' gesucht und unter dem Originalnamen geladen.
 
 ```python
 >>> import os                 # entspricht: import uos as os
->>> os.uname()
-(sysname='esp8266', nodename='esp8266', release='2.0.0(5a875ba)', version='v1.12-164-g7679e3be9 on 2020-02-12', machine='ESP module with ESP8266')
+
+>>> os.__name__
+'uos'
+>>>
+
+>>> os.listdir('/')
+['boot.py',  ...   ]
+
 >>>
 ```
 
@@ -221,13 +230,13 @@ Spielen:
 
 ```python
 >>> import sys
->>> sys.                      # <<<TAB>>>
+>>> sys.    # <<<TAB>>>
 __class__       __name__        argv            byteorder
 exit            implementation  maxsize         modules
 path            platform        print_exception
 stderr          stdin           stdout          version
 version_info
->>> sys.std                   # <<<TAB>>>
+>>> sys.std    # <<<TAB>>>
 stderr          stdin           stdout
 >>> sys.std
 ```
@@ -263,7 +272,7 @@ init            irq             off             on
 >>> pin0 = Pin(0, Pin.IN, Pin.PULL_UP)
 >>> pin0.value()
 1
->>> pin0.value()                   # gedrückter Button
+>>> pin0.value()    # gedrückter Button
 0
 >>>
 ```
@@ -328,7 +337,7 @@ adc.read()                  # read value using the newly configured attenuation 
 - SPI
 - DAC
 - RTC - Uhr
-- RMT (ESP32) – Pulsgenerator 12,5ns Auflösung
+- RMT (ESP32) – HW-Pulsgenerator 12,5ns Auflösung
 - OneWire
 - Capacitive touch (ESP32)
 - DHT - Temperatursensor
@@ -356,7 +365,7 @@ print(sta.ifconfig())                # IP ausgeben
 
 > siehe main.py
 
-##### Verbindung als Access-Point (AP)
+##### ESP als Access-Point (AP)
 
 ```python
 ap = network.WLAN(network.AP_IF)

@@ -3,8 +3,8 @@ import time
 
 SSID = "<your-SSID>"
 PASSWORD = "<your-password>"
-SSID = "vy_guest"
-PASSWORD = "#Mercury2017"
+SSID = "fablab-wue"
+PASSWORD = "cwurzdfi"
 
 def net():
     sta_if = network.WLAN(network.STA_IF)
