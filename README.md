@@ -46,13 +46,14 @@ https://www.arduino.cc/
 
 http://micropython.org/
 https://docs.micropython.org/
+http://wiki.micropython.org/Home
 
 - Programmiersprache MicroPython - entspricht CPython 3.4
 - REPL (Read–eval–print loop)
-- WebREPL
+- (WebREPL)
 - Flash-Dateisystem für *.py und Daten
 - 'Boot-Loader' für ESP
-- Standard-Module (fast) wie CPython
+- Standard-Module (fast) wie in CPython
 - Hardware-Module für ESP
 
 ---
@@ -87,13 +88,17 @@ Spielen im REPL:
 ```python
 >>> 1 + 2
 3
+
 >>> "Hallo" + " Welt"
 'Hallo Welt'
+
 >>> a = "Hallo"
 >>> print(a)
 Hallo
+
 >>> a
 'Hallo'
+
 >>>
 ```
 
@@ -105,9 +110,33 @@ WebREPL: http://micropython.org/webrepl/
 
 ### Module (Libs)
 
-Anzeige aller 'eingebauten' Module:
+> Siehe hallo.py
 
-```python
+```
+>>> import hallo
+- Module "hallo" - Anfang
+- Module "hallo" - Ende
+
+>>> hallo.test
+42
+
+>>> hallo.welt()
+Hallo Jochen
+
+>>> help(hallo)
+object <module 'hallo'> is of type module
+  __name__ -- hallo
+  test -- 42
+  gc -- <module 'gc'>
+  ram -- <function ram at 0x3fff06b0>
+  welt -- <function welt at 0x3fff05b0>
+  
+>>>
+```
+
+##### Anzeige aller 'eingebauten' Module:
+
+```
 >>> help('modules')
 __main__          inisetup          ucollections      uselect
 _boot             lwip              ucryptolib        usocket
@@ -123,8 +152,11 @@ flashbdev         sys               upip_utarfile     websocket_helper
 framebuf          uarray            urandom
 gc                ubinascii         ure
 Plus any modules on the filesystem
+
 >>>
 ```
+
+Diese Module sind in C geschrieben oder im Byte-Code kompiliert und liegen im Flash.
 
 ##### Übersicht Standard-Module (wie CPython)
 
@@ -295,13 +327,13 @@ adc.read()                  # read value using the newly configured attenuation 
 - UART
 - SPI
 - DAC
-- RTC
-- RMT (ESP32)
+- RTC - Uhr
+- RMT (ESP32) – Pulsgenerator 12,5ns Auflösung
 - OneWire
 - Capacitive touch (ESP32)
-- DHT
+- DHT - Temperatursensor
 - Timer
-- Sleep
+- Sleep / Deep-Sleep
 
 ---
 
@@ -313,34 +345,26 @@ adc.read()                  # read value using the newly configured attenuation 
 import network
 import time
 
-SSID = "<your-SSID>"
-PWD = "<your-password>"
-
-sta_if = network.WLAN(network.STA_IF)   # WLAN-Objekt als _Client_ erzeugen
-sta_if.active(True)                     # Modem einschalten
-sta_if.scan()                           # Scannen nach APs
-sta_if.connect(SSID, PWD)               # Verbindung herstellen
-while not sta_if.isconnected():         # Verbindung prüfen
+sta = network.WLAN(network.STA_IF)   # WLAN-Objekt als _Client_ erzeugen
+sta.active(True)                     # Modem einschalten
+sta.scan()                           # Scannen nach APs
+sta.connect('<your-SSID>', '<your-password>') # Verbindung herstellen
+while not sta.isconnected():         # Verbindung prüfen und warten
     pass
-print(sta_if.ifconfig())                # IP ausgeben
+print(sta.ifconfig())                # IP ausgeben
 ```
 
 > siehe main.py
 
 ##### Verbindung als Access-Point (AP)
 
-TODO
-
 ```python
-station = network.WLAN(network.STA_IF)
+ap = network.WLAN(network.AP_IF)
+ap.config(essid='ESP-AP', password='topsecret') # set the ESSID of the access point
+ap.config(max_clients=10) # set how many clients can connect to the network
+ap.active(True)
 
-station.active(True)
-station.connect(ssid, password)
-
-while not station.isconnected():
-    pass
-
-print(station.ifconfig())
+print(ap.ifconfig())
 ```
 
 ##### Uhrzeit über Netzwerk holen (NTP)
@@ -360,7 +384,7 @@ Date Time: (2020, 2, 12, 2, 11, 8, 38, 481)
 > Nur auf ESP32 als Standard-Modul
 
 ```python
-from umqttsimple import MQTTClient
+from umqtt.simple import MQTTClient
 
 client = MQTTClient(client_id, '192.168.1.123')
 client.set_callback(sub_cb)
@@ -382,7 +406,7 @@ def sub_cb(topic, msg):
 ```python
 import urequests as requests
 
->>> r = requests.get("https://www.nerd2nerd.org")
+>>> r = requests.get("https://api.nerd2nerd.org/status.html")
 >>> r
 <Response object at 3f826240>
 >>> r.   # <<<TAB>>>
@@ -391,8 +415,30 @@ close           __dict__        encoding        text
 json            content         raw             _cached
 status_code     reason
 >>> r.text
-'<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de">\n  <head><meta ...
-...
+'<!doctype html>\n<html lang="de">\n<head>\n
+  <meta charset="utf-8">\n  <title>Status</title>\n
+  </head>\n\n
+  <body style="margin: 0;">\n
+  <img id="status" src="./images/closed.png" width="200" height="77">\n\n
+  ...
+  \n\n</body>\n</html>\n'
+
+>>> r = requests.get("https://api.nerd2nerd.org/status.json")
+>>> r.json()
+{'state': {'lastchange': 1581530018, 'open': False},  ...  'space': 'Nerd2Nerd'}
+>>> r.json()['state']['open']
+False
+
+>>>
+```
+
+##### DNS-Anfrage
+
+```python
+>>> import socket
+>>> socket.getaddrinfo('doku.nerd2nerd.org', 80)
+[(2, 1, 0, 'doku.nerd2nerd.org', ('148.251.171.26', 80))]
+>>>
 ```
 
 ---
@@ -416,7 +462,7 @@ Weitere Funktionen im Modul "os"
 >>>
 ```
 
-Hack auf ESP32:
+Hack (ESP32):
 
 ```python
 >>> from upysh import *
@@ -432,12 +478,15 @@ newfile(...), mv("old", "new"), rm(...), mkdir(...), rmdir(...),
 clear
 
 >>> ls
-    139 boot.py
-    342 debug.json
-    <dir> lib
-    822 main.py
-    413 networks.json
-    <dir> www
+    1073 LICENSE
+     230 boot.py
+     219 hallo.py
+   <dir> lib
+     590 main.py
+    4897 project.pymakr
+       2 scratch.py
+    6605 web.py
+   <dir> www
 
 >>> cd("lib")
 >>>
@@ -447,8 +496,17 @@ clear
 
 ### Demo: WebServer
 
+> Siehe web.py
+
 [Projekt auf Github](https://github.com/jczic/MicroWebSrv2)
 
 ---
 
-### The End
+### Links
+
+Firmware selbst bauen:
+http://akshaim.github.io/IoT/MicroPython_ESP8266/MP_ESP_101.html
+https://medium.com/@alwint3r/compiling-micropython-for-esp32-85cc1968e424
+
+Bücher:
+https://subscription.packtpub.com/book/application_development/9781838649951

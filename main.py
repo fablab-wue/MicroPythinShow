@@ -2,19 +2,24 @@ import network
 import time
 
 SSID = "<your-SSID>"
-PWD = "<your-password>"
-SSID = ""
-PWD = ""
+PASSWORD = "<your-password>"
+SSID = "vy_guest"
+PASSWORD = "#Mercury2017"
 
-print('Connecting to WiFi "{}"'.format(SSID))
+def net():
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
 
-sta_if = network.WLAN(network.STA_IF)
-sta_if.active(True)
-sta_if.connect(SSID, PWD) # Connect to an AP
+    if not sta_if.isconnected():  # Check if connected
+        print('Connecting to WiFi "{}"'.format(SSID))
 
-while not sta_if.isconnected():  # Check for successful connection
-    print(".", end='')
-    time.sleep(1)
+        sta_if.connect(SSID, PASSWORD) # Connect to an AP
 
-print()
-print(sta_if.ifconfig())
+        while not sta_if.isconnected():  # Check for successful connection
+            print(".", end='')
+            time.sleep(1)
+
+    print()
+    print(sta_if.ifconfig())
+
+from upysh import *
