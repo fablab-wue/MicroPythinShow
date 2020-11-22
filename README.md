@@ -1,66 +1,80 @@
-# MicroPython-Show
+# MicroPython für MicroController
 
-Live-Vortrag über MicroPython für ESP8266 / ESP32
+_Jochen Krapf - 2020-11-22_
+
+Bei MicroControllern hat sich die Programmiersprache C/C++ durchgesetzt. Für Hobbyisten, die einen __ESP8266__ oder __ESP32__ programmieren wollen, gibt es eine interessante Alternative: __MicroPython__.
+
+Der Vortrag gibt einen Einblick in die Arbeitsweise mit dieser Sprache sowie einen Überblick über das reichhaltige Angebot an System-, Kommunikations- und hardwarenahen Bibliotheken.
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Micropython-logo.svg/200px-Micropython-logo.svg.png) ![](https://avatars2.githubusercontent.com/u/6298560?s=200&v=4)
 
-"MicroPython ist eine Softwareimplementierung einer Programmiersprache, die weitgehend kompatibel mit Python 3 ist, geschrieben in C, die für den Betrieb auf einem Mikrocontroller optimiert ist. MicroPython ist ein vollständiger Python-Compiler und eine Laufzeitumgebung, die auf der Mikrocontroller-Hardware läuft. Enthalten ist eine Auswahl von Python-Kernbibliotheken; MicroPython enthält Module, die dem Programmierer Zugriff auf Low-Level-Hardware ermöglichen. Der Quellcode für das Projekt ist auf GitHub unter der MIT-Lizenz verfügbar." 
-*Quelle: [Wikipedia.de](https://de.wikipedia.org/wiki/MicroPython) / [Wikipedia.com](https://en.wikipedia.org/wiki/MicroPython)*
-
-##### PyBoard
-![](http://micropython.org/static/home/img/pybv11-persp.jpg)
-*Quelle: [micropython.org](http://micropython.org/)*
-
-Entwickelt von [Damien P. George](http://dpgeorge.net/) in 2014. Sourcen auf [Github](https://github.com/micropython/micropython)
-
 ---
 
-### Größenordnung
+## Größenordnung
 
 Typische Größen:
 
 | Rechner | Bits | CPU | RAM | Disk/Flash | P | Features |
 | - | - | - | - | - | - | - |
-| PC / Laptop | 64 | ~3 GHz | ~8 GB | ~1 TB | >50 W | Betriebssystem, (W)LAN, FPU, GPU, ...
-| Raspberry Pi 3 | 32 | 1 GHz | 512 MB | 4 GB ... 32 GB | 5 W | Betriebssystem, GPIO, (W)LAN
-| __ESP32__ | 32 | 240 MHz | 160 kB (4 MB) | 4 MB | <1 W | GPIO, WLAN
-| __ESP8266__ | 32 | 80 MHz | 80 kB | 512 kB ... 4 MB | <1 W | GPIO, WLAN
-| Arduino (AVR) | 8 | 16 MHz| 2 Kb | 16 kB | <100 mW | GPIO
+| PC / Laptop | 64 | ~3GHz | ~8GB | ~1TB | >50W | Betriebssystem, (W)LAN, FPU, GPU, ...
+| Raspberry Pi 0/3/4 | 32 | ~1.2GHz | 512MB ... 4GB | 4 ... 32GB | 5 W | Betriebssystem, GPIO, (W)LAN
+| __ESP32__ | 32 | 240MHz | 160kB (4MB) | 4MB | <1W | GPIO, WLAN
+| __ESP8266__ | 32 | 80MHz | 80kB | 512kB ... 4MB | <1W | GPIO, WLAN
+|__STM32__ (Cortex M3/M4)|32| ...168MHz| 192kB | 1MB | <1W | (FPU)
+| Arduino (AVR) | 8 | 16MHz| 2Kb | 16kB | <100mW | GPIO
 
 > => Für Hardware-Spielereien: **ESP**
 
+### PyBoard (STM32)
+![](http://micropython.org/static/home/img/pybv11-persp.jpg)
+
+*Quelle: [micropython.org](http://micropython.org/)*
+
+Entwickelt von [Damien P. George](http://dpgeorge.net/) in 2014. Sourcen auf [Github](https://github.com/micropython/micropython)
+
+### ESP8266 / ESP32 - Boards
+
+![](https://i.pinimg.com/originals/9f/81/b9/9f81b9723d22d27b84d4548c2e12fff5.png)
+
+![](https://ae01.alicdn.com/kf/HTB1aXmsbyYrK1Rjy0Fdq6ACvVXak.jpg)
+
 ---
 
-### Entwicklungsumgebung für ESP
+## Entwicklungsumgebung für ESP (für Maker)
 
-##### Arduino-IDE
+### Arduino-IDE
 
 https://www.arduino.cc/
 
 - Programmiersprache (fast) C / C++
-- Compiler
-- Programmier-Tool (speichern im Flash)
+- Integrierter Compiler
+- Integriertes Flash-Tool (speichern im Flash)
 - Kein Debugger
 
-##### MicroPython
+### MicroPython
 
 http://micropython.org/
 https://docs.micropython.org/
 http://wiki.micropython.org/Home
 
 - Programmiersprache MicroPython - entspricht CPython 3.4
-- REPL (Read–eval–print loop)
+- REPL (Read–Eval–Print-Loop)
 - (WebREPL)
-- Flash-Dateisystem für *.py und Daten
+- Einfaches Flash-Dateisystem für *.py und Daten
 - 'Boot-Loader' für ESP
 - Standard-Module (fast) wie in CPython
 - Hardware-Module für ESP
 
 ---
+"MicroPython ist eine Softwareimplementierung einer Programmiersprache, die weitgehend kompatibel mit Python 3 ist, geschrieben in C, die für den Betrieb auf einem Mikrocontroller optimiert ist. MicroPython ist ein vollständiger Python-Compiler und eine Laufzeitumgebung, die auf der Mikrocontroller-Hardware läuft. Enthalten ist eine Auswahl von Python-Kernbibliotheken; MicroPython enthält Module, die dem Programmierer Zugriff auf Low-Level-Hardware ermöglichen. Der Quellcode für das Projekt ist auf GitHub unter der MIT-Lizenz verfügbar." 
 
-### Installation
+*Quelle: [Wikipedia.de](https://de.wikipedia.org/wiki/MicroPython) / [Wikipedia.com](https://en.wikipedia.org/wiki/MicroPython)*
 
-##### Einmalige Flashen auf dem ESP
+---
+
+## Installation
+
+### Einmalige Flashen auf dem ESP
 
 http://micropython.org/download
 
@@ -69,13 +83,13 @@ Anleitung folgen...
     esptool.py --chip esp32 --port /dev/ttyUSB0 erase_flash
     esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 esp32-20190125-v1.10.bin
 
-##### Kommunikation mit ESP / IDE
+### Kommunikation mit ESP / IDE
 
 - Terminal (TTY/COM 115200 Buad 8N1)
 - "[uPyCraft](https://github.com/DFRobot/uPyCraft)" (GUI, Windows, Mac)
 - "[mpfshell](https://github.com/wendlers/mpfshell)" (CLI, alle)
 - "rshell" (CLI, Linux)
-- "pycom"-Plugin für VS-Code (GUI, alle)
+- "pymakr"-Plugin (von pycom) für VS-Code (GUI, alle)
 
 Antwort vom ESP:
 
@@ -108,7 +122,7 @@ WebREPL: http://micropython.org/webrepl/
 
 ---
 
-### Module (Libs)
+## Python-Module (Libs)
 
 > Siehe hallo.py
 
@@ -134,31 +148,33 @@ object <module 'hallo'> is of type module
 >>>
 ```
 
-##### Anzeige aller 'eingebauten' Module:
+### Anzeige aller 'eingebauten' Standard-Module:
 
 ```
 >>> help('modules')
-__main__          inisetup          ucollections      uselect
-_boot             lwip              ucryptolib        usocket
-_onewire          machine           uctypes           ussl
-_webrepl          math              uerrno            ustruct
-apa102            micropython       uhashlib          utime
-btree             neopixel          uheapq            utimeq
-builtins          network           uio               uwebsocket
-dht               ntptime           ujson             uzlib
-ds18x20           onewire           uos               webrepl
-esp               port_diag         upip              webrepl_setup
-flashbdev         sys               upip_utarfile     websocket_helper
-framebuf          uarray            urandom
-gc                ubinascii         ure
+__main__          gc                ubinascii         urandom
+_boot             inisetup          ubluetooth        ure    
+_onewire          machine           ucollections      urequests
+_thread           math              ucryptolib        uselect
+_uasyncio         micropython       uctypes           usocket
+_webrepl          neopixel          uerrno            ussl
+apa106            network           uhashlib          ustruct
+btree             ntptime           uheapq            usys
+builtins          onewire           uio               utime
+cmath             uarray            ujson             utimeq
+dht               uasyncio/__init__ umqtt/robust      uwebsocket
+ds18x20           uasyncio/core     umqtt/simple      uzlib
+esp               uasyncio/event    uos               webrepl
+esp32             uasyncio/funcs    upip              webrepl_setup
+flashbdev         uasyncio/lock     upip_utarfile     websocket_helper
+framebuf          uasyncio/stream   upysh
 Plus any modules on the filesystem
-
 >>>
 ```
 
 Diese Module sind in C geschrieben oder im Byte-Code kompiliert und liegen im Flash.
 
-##### Übersicht Standard-Module (wie CPython)
+### Übersicht Standard-Module (wie CPython)
 
 - cmath – mathematical functions for complex numbers
 - gc – control the garbage collector
@@ -243,11 +259,11 @@ stderr          stdin           stdout
 
 ---
 
-### Zugriff auf die Hardware des ESP
+## Zugriff auf die Hardware des ESP
 
 Alle Klassen für den Zugriff auf Hardware sind im Modul "machine"
 
-##### GPIO als Ausgang (LED)
+### GPIO als Ausgang (LED)
 
 ```python
 >>> from machine import Pin
@@ -265,7 +281,7 @@ init            irq             off             on
 >>>
 ```
 
-##### GPIO als Eingang (Button)
+### GPIO als Eingang (Button)
 
 ```python
 >>> from machine import Pin
@@ -277,7 +293,7 @@ init            irq             off             on
 >>>
 ```
 
-##### PWM (LED)
+### PWM (LED)
 
 ```python
 >>> from machine import PWM, Pin
@@ -289,7 +305,7 @@ init            irq             off             on
 >>>
 ```
 
-##### I2C-Bus
+### I2C-Bus
 
 ```python
 >>> from machine import I2C, Pin
@@ -299,7 +315,7 @@ init            irq             off             on
 >>>
 ```
 
-##### Neopixel (WS2812)
+### Neopixel (WS2812)
 
 ```python
 >>> from machine import Pin
@@ -311,34 +327,57 @@ init            irq             off             on
 >>> r, g, b = np[0]         # get first pixel colour
 ```
 
-##### ADC (Analog-Digital-Wandler)
+### ADC (Analog-Digital-Wandler)
 
 ESP8266:
 ```python
 >>> from machine import ADC
 >>> adc = ADC(0)            # create ADC object on ADC pin
->>> adc.read()              # read value, 0-1024
+>>> adc.read()              # read value, 0-1023
+0 ... 1023
 ```
 ESP32:
 ```python
-rom machine import ADC
-
-adc = ADC(Pin(32))          # create ADC object on ADC pin
-adc.read()                  # read value, 0-4095 across voltage range 0.0v - 1.0v
-
-adc.atten(ADC.ATTN_11DB)    # set 11dB input attenuation (voltage range roughly 0.0v - 3.6v)
-adc.width(ADC.WIDTH_9BIT)   # set 9 bit return values (returned range 0-511)
-adc.read()                  # read value using the newly configured attenuation and width
+>>> from machine import ADC
+>>> adc = ADC(Pin(32))          # create ADC object on ADC pin
+>>> adc.read()                  # read value, 0-4095 across voltage range 0.0v - 1.0v
+0 ... 4095
+>>> adc.atten(ADC.ATTN_11DB)    # set 11dB input attenuation (voltage range roughly 0.0v - 3.6v)
+>>> adc.width(ADC.WIDTH_9BIT)   # set 9 bit return values (returned range 0-511)
+>>> adc.read()                  # read value using the newly configured attenuation and width
 ```
 
-##### Weitere...
+### OneWire, 1-Wire (DS18x20)
+
+![](https://www.theengineeringprojects.com/wp-content/uploads/2019/01/Introduction-to-DS18B20.jpg)
+
+```python
+>>> import time, machine, onewire, ds18x20
+
+>>> pin = machine.Pin(19)   # Pin für OneWire-Bus
+
+>>> ds = ds18x20.DS18X20(onewire.OneWire(pin))
+
+>>> roms = ds.scan()   # nach Sensoren suchen
+>>> roms
+[bytearray(b'(ad\x11\xb3\x94V\xf5'), bytearray(b'(ad\x11\x83\xd6q\x81')]
+
+>>> ds.convert_temp()   # Messung starten
+>>> time.sleep_ms(750)   # Messzeit abwarten: 750ms
+>>> for rom in roms:
+...    t = ds.read_temp(rom)
+...    print(rom, t)
+21.5
+21.4375
+```
+
+### Weitere...
 
 - UART
 - SPI
 - DAC
 - RTC - Uhr
 - RMT (ESP32) – HW-Pulsgenerator 12,5ns Auflösung
-- OneWire
 - Capacitive touch (ESP32)
 - DHT - Temperatursensor
 - Timer
@@ -346,9 +385,9 @@ adc.read()                  # read value using the newly configured attenuation 
 
 ---
 
-### Netzwerk
+## Netzwerk
 
-##### Verbindung zu einem Access-Point (AP)
+### Verbindung zu einem Access-Point (AP)
 
 ```python
 import network
@@ -365,7 +404,7 @@ print(sta.ifconfig())                # IP ausgeben
 
 > siehe main.py
 
-##### ESP als Access-Point (AP)
+### ESP als Access-Point (AP)
 
 ```python
 ap = network.WLAN(network.AP_IF)
@@ -376,7 +415,7 @@ ap.active(True)
 print(ap.ifconfig())
 ```
 
-##### Uhrzeit über Netzwerk holen (NTP)
+### Uhrzeit über Netzwerk holen (NTP)
 
 ```python
 >>> import ntptime
@@ -388,19 +427,19 @@ Date Time: (2020, 2, 12, 2, 11, 8, 38, 481)
 >>>
 ```
 
-##### MQTT-Client
+### MQTT-Client
 
 > Nur auf ESP32 als Standard-Modul
 
 ```python
 from umqtt.simple import MQTTClient
 
-client = MQTTClient(client_id, '192.168.1.123')
-client.set_callback(sub_cb)
-client.connect()
-client.subscribe('/zuhause/licht/#')
+mqtt_client = MQTTClient(client_id, '192.168.1.123')
+mqtt_client.set_callback(sub_cb)
+mqtt_client.connect()
+mqtt_client.subscribe('/zuhause/licht/#')
 
-client.publish('/zuhause/licht/schalter', 'ON')
+mqtt_client.publish('/zuhause/licht/schalter', 'ON')
 
 def sub_cb(topic, msg):
     print(topic, msg)
@@ -408,12 +447,14 @@ def sub_cb(topic, msg):
         print('Es werde Licht!')
 ```
 
-##### HTTP-Request (REST-API)
+### HTTP-Request (Web-Seite laden)
 
 > Nur auf ESP32 als Standard-Modul
 
 ```python
 import urequests as requests
+
+>>> # WLAN-Verbindung herstellen...
 
 >>> r = requests.get("https://api.nerd2nerd.org/status.html")
 >>> r
@@ -441,7 +482,23 @@ False
 >>>
 ```
 
-##### DNS-Anfrage
+### HTTP-Request (REST-API)
+
+> Nur auf ESP32 als Standard-Modul
+
+##### WLAN-Steckdose einschalten über REST-API
+
+```python
+>>> import urequests as requests
+
+>>> # WLAN-Verbindung herstellen...
+
+>>> r = requests.get("http://fs200.fritz.box/cm?cmnd=Power%20On")
+>>> r.text
+'{"POWER":"ON"}'
+```
+
+### DNS-Anfrage
 
 ```python
 >>> import socket
@@ -452,7 +509,23 @@ False
 
 ---
 
-### Flash-Dateisystem
+## Flash-Dateisystem
+
+Zugriff auf Dateien mit den üblichen Python-Funktionen
+
+##### Klassisch
+
+```python
+f = open('hello.txt', 'w')
+f.write('Hello world')
+f.close()
+
+f = open('hello.txt', 'r')
+print(f.read())
+f.close()
+```
+
+##### Mit Context-Manager ('with')
 
 ```python
 with open('hello.txt', 'w') as f:
@@ -462,16 +535,32 @@ with open('hello.txt', 'r') as f:
     print(f.read())
 ```
 
-Weitere Funktionen im Modul "os"
+##### Beispiel: JSON-Config-File laden
+
+```python
+>>> import json
+
+>>> with open('config.json', 'r') as f:
+...    config = json.load(f)
+
+>>> config
+{'Lorem': 3.14, 'Dolor': [1, 2, 3], 'Ipsum': 'abc'}
+```
+
+##### Weitere Funktionen im Modul "os"
 
 ```python
 >>> import os
 >>> os.listdir('/')
-['boot.py', 'main.py']
->>>
+['boot.py', 'main.py', 'lib']
+
+>>> os.chdir('/lib')
+
+>>> os.getcwd()
+'/lib'
 ```
 
-Hack (ESP32):
+##### CLI-Hack (ESP32):
 
 ```python
 >>> from upysh import *
@@ -503,19 +592,28 @@ clear
 
 ---
 
-### Demo: WebServer
+## Demo: WebServer
 
 > Siehe web.py
 
-[Projekt auf Github](https://github.com/jczic/MicroWebSrv2)
+Projekt auf Github:
+https://github.com/jczic/MicroWebSrv2
 
 ---
 
 ### Links
 
+Dieses Projekt:
+- https://github.com/fablab-wue/MicroPythonShow.git
+
+MicroPython:
+- http://micropython.org/
+- https://docs.micropython.org/
+- http://wiki.micropython.org/Home
+
 Firmware selbst bauen:
-http://akshaim.github.io/IoT/MicroPython_ESP8266/MP_ESP_101.html
+- http://akshaim.github.io/IoT/MicroPython_ESP8266/MP_ESP_101.html
 https://medium.com/@alwint3r/compiling-micropython-for-esp32-85cc1968e424
 
 Bücher:
-https://subscription.packtpub.com/book/application_development/9781838649951
+- https://subscription.packtpub.com/book/application_development/9781838649951

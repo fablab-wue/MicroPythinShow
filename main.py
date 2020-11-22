@@ -1,11 +1,10 @@
 import network
 import time
 
-SSID = "<your-SSID>"
-PASSWORD = "<your-password>"
-SSID = "fablab-wue"
-PASSWORD = "cwurzdfi"
+# load WLAN credentials
+from WLAN_PW import SSID, PASSWORD
 
+# define function to start network
 def net():
     sta_if = network.WLAN(network.STA_IF)
     sta_if.active(True)
@@ -22,4 +21,9 @@ def net():
     print()
     print(sta_if.ifconfig())
 
+# load CLI commands
 from upysh import *
+
+import os, time, machine, onewire, ds18x20, network
+from machine import PWM, Pin, ADC
+import urequests as requests
